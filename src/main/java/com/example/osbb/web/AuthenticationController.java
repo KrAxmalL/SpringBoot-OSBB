@@ -1,7 +1,7 @@
 package com.example.osbb.web;
 
 import com.example.osbb.domain.dto.ErrorResponse;
-import com.example.osbb.domain.dto.principal.UpdateRolesDTO;
+import com.example.osbb.domain.dto.principal.RegisterPrincipalDTO;
 import com.example.osbb.exception.EntityNotFoundException;
 import com.example.osbb.exception.EntityValidationException;
 import com.example.osbb.service.PrincipalService;
@@ -11,17 +11,17 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/principals")
+@RequestMapping("/api/authentication")
 @RequiredArgsConstructor
-public class PrincipalController {
+public class AuthenticationController {
 
   private final PrincipalService principalService;
 
-  @PutMapping("/{principalId}")
-  public ResponseEntity<?> updateRolesForPrincipal(
-      @PathVariable Integer principalId, @RequestBody UpdateRolesDTO updateRolesDTO) {
-    principalService.updateRolesForPrincipal(principalId, updateRolesDTO);
-    return ResponseEntity.ok().build();
+  @PostMapping("/registration")
+  public ResponseEntity<?> registerPrincipal(
+      @RequestBody RegisterPrincipalDTO registerPrincipalDTO) {
+    principalService.registerPrincipal(registerPrincipalDTO);
+    return ResponseEntity.status(HttpStatus.CREATED).build();
   }
 
   @ExceptionHandler(EntityNotFoundException.class)

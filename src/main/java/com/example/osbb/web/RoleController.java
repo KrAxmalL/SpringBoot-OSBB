@@ -1,27 +1,37 @@
 package com.example.osbb.web;
 
 import com.example.osbb.domain.dto.ErrorResponse;
-import com.example.osbb.domain.dto.principal.UpdateRolesDTO;
+import com.example.osbb.domain.dto.role.AddRoleDTO;
+import com.example.osbb.domain.dto.role.RoleDetailsDTO;
 import com.example.osbb.exception.EntityNotFoundException;
 import com.example.osbb.exception.EntityValidationException;
-import com.example.osbb.service.PrincipalService;
+import com.example.osbb.service.RoleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/principals")
+@RequestMapping("/api/roles")
 @RequiredArgsConstructor
-public class PrincipalController {
+public class RoleController {
 
-  private final PrincipalService principalService;
+  private final RoleService roleService;
 
-  @PutMapping("/{principalId}")
-  public ResponseEntity<?> updateRolesForPrincipal(
-      @PathVariable Integer principalId, @RequestBody UpdateRolesDTO updateRolesDTO) {
-    principalService.updateRolesForPrincipal(principalId, updateRolesDTO);
-    return ResponseEntity.ok().build();
+  @GetMapping
+  public Iterable<RoleDetailsDTO> getAllRoles() {
+    return roleService.getAllRoles();
+  }
+
+  @GetMapping("/{roleId}")
+  public RoleDetailsDTO getRoleById(@PathVariable Integer roleId) {
+    return roleService.getRoleById(roleId);
+  }
+
+  @PostMapping
+  public ResponseEntity<?> addRole(@RequestBody AddRoleDTO addRoleDTO) {
+    roleService.addRole(addRoleDTO);
+    return ResponseEntity.status(HttpStatus.CREATED).build();
   }
 
   @ExceptionHandler(EntityNotFoundException.class)

@@ -1,16 +1,20 @@
 package com.example.osbb.service;
 
 import com.example.osbb.domain.dto.principal.RegisterPrincipalDTO;
+import com.example.osbb.domain.dto.principal.UpdateRolesDTO;
 import com.example.osbb.domain.model.User;
 import com.example.osbb.domain.security.Principal;
+import com.example.osbb.exception.EntityNotFoundException;
 import com.example.osbb.exception.EntityValidationException;
 import com.example.osbb.repository.PrincipalRepository;
 import com.example.osbb.repository.RoleRepository;
 import com.example.osbb.repository.UserRepository;
 import com.example.osbb.validation.PrincipalValidator;
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 @Service
 @RequiredArgsConstructor
@@ -46,5 +50,30 @@ public class PrincipalServiceImpl implements PrincipalService {
             .advertisements(List.of())
             .build();
     userRepository.save(user);
+  }
+
+  @Override
+  public void updateRolesForPrincipal(Integer principalId, UpdateRolesDTO updateRolesDTO) {
+    Principal principal =
+        principalRepository
+            .findById(principalId)
+            .orElseThrow(
+                () -> new EntityNotFoundException("Principal with given id doesn't exist"));
+
+    if (CollectionUtils.isEmpty(updateRolesDTO.getRoles())) {
+      throw new EntityValidationException("There must be at least one role");
+    }
+
+    principal.setRoles(
+        updateRolesDTO.getRoles().stream()
+            .map(
+                roleName ->
+                    roleRepository
+                        .findRoleByName(roleName)
+                        .orElseThrow(
+                            () ->
+                                new EntityNotFoundException("Role with given name doesn't exist")))
+            .collect(Collectors.toList()));
+    principalRepository.save(principal);
   }
 }

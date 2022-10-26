@@ -7,4 +7,6 @@ import org.springframework.data.repository.CrudRepository;
 public interface RoleRepository extends CrudRepository<Role, Integer> {
 
   Optional<Role> findRoleByName(String name);
+
+  boolean existsRoleByName(String name);
 }
