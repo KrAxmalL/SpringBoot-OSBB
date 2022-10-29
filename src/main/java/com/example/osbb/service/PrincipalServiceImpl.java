@@ -13,6 +13,10 @@ import com.example.osbb.validation.PrincipalValidator;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Marker;
+import org.slf4j.MarkerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -26,6 +30,9 @@ public class PrincipalServiceImpl implements PrincipalService {
   private final PrincipalValidator principalValidator;
 
   private static final String USER_ROLE = "user";
+
+  private static final Logger logger = LoggerFactory.getLogger(PrincipalServiceImpl.class);
+  private final Marker SERVICE_MARKER = MarkerFactory.getMarker("SERVICE");
 
   @Override
   public void registerPrincipal(RegisterPrincipalDTO registerPrincipalDTO) {
@@ -49,6 +56,13 @@ public class PrincipalServiceImpl implements PrincipalService {
             .credentials(principal)
             .advertisements(List.of())
             .build();
+
+    logger.info(
+        SERVICE_MARKER,
+        "Registering user with email={} and password={}",
+        registerPrincipalDTO.getEmail(),
+        registerPrincipalDTO.getPassword());
+
     userRepository.save(user);
   }
 

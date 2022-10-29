@@ -19,4 +19,3 @@ spring:
     init:
       mode: always
       data-locations: classpath:/sql/data.sql
-
