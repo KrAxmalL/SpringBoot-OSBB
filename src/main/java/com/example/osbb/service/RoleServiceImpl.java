@@ -5,9 +5,7 @@ import com.example.osbb.domain.dto.role.RoleDetailsDTO;
 import com.example.osbb.domain.mapper.RoleMapper;
 import com.example.osbb.domain.security.Role;
 import com.example.osbb.exception.EntityNotFoundException;
-import com.example.osbb.exception.EntityValidationException;
 import com.example.osbb.repository.RoleRepository;
-import com.example.osbb.validation.RoleValidator;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +17,6 @@ public class RoleServiceImpl implements RoleService {
 
   private final RoleRepository roleRepository;
   private final RoleMapper roleMapper;
-  private final RoleValidator roleValidator;
 
   @Override
   public Iterable<RoleDetailsDTO> getAllRoles() {
@@ -38,9 +35,6 @@ public class RoleServiceImpl implements RoleService {
 
   @Override
   public void addRole(AddRoleDTO addRoleDTO) {
-    if (!roleValidator.isValid(addRoleDTO)) {
-      throw new EntityValidationException("Role is not valid");
-    }
     Role role = Role.builder().name(addRoleDTO.getName()).build();
     roleRepository.save(role);
   }

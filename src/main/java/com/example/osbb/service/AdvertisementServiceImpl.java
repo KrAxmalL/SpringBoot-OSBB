@@ -5,18 +5,17 @@ import com.example.osbb.domain.dto.advertisement.AdvertisementDetailsDTO;
 import com.example.osbb.domain.dto.advertisement.UpdateAdvertisementDTO;
 import com.example.osbb.domain.mapper.AdvertisementMapper;
 import com.example.osbb.domain.model.Advertisement;
+import com.example.osbb.domain.model.User;
 import com.example.osbb.exception.EntityNotFoundException;
 import com.example.osbb.exception.EntityValidationException;
 import com.example.osbb.repository.AdvertisementRepository;
 import com.example.osbb.repository.UserRepository;
-import com.example.osbb.validation.AdvertisementValidator;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -25,7 +24,6 @@ public class AdvertisementServiceImpl implements AdvertisementService {
 
   private final UserRepository userRepository;
   private final AdvertisementRepository advertisementRepository;
-  private final AdvertisementValidator advertisementValidator;
   private final AdvertisementMapper advertisementMapper;
 
   @Override
@@ -50,14 +48,16 @@ public class AdvertisementServiceImpl implements AdvertisementService {
 
   @Override
   public void addAdvertisement(AddAdvertisementDTO addAdvertisementDTO) {
-    if (advertisementValidator.isValid(addAdvertisementDTO)) {
-      final Advertisement advertisement = advertisementMapper.toAdvertisement(addAdvertisementDTO);
-      advertisement.setCreatedAt(Instant.now().toEpochMilli());
-      advertisement.setAuthor(userRepository.findById(addAdvertisementDTO.getAuthorId()).get());
-      advertisementRepository.save(advertisement);
-    } else {
-      throw new EntityValidationException("Advertisement is not valid");
-    }
+    final User author =
+        userRepository
+            .findById(addAdvertisementDTO.getAuthorId())
+            .orElseThrow(
+                () -> new EntityValidationException("Author with given id doesn't exists"));
+
+    final Advertisement advertisement = advertisementMapper.toAdvertisement(addAdvertisementDTO);
+    advertisement.setCreatedAt(Instant.now().toEpochMilli());
+    advertisement.setAuthor(author);
+    advertisementRepository.save(advertisement);
   }
 
   @Override
@@ -67,34 +67,25 @@ public class AdvertisementServiceImpl implements AdvertisementService {
     if (advertisementOpt.isEmpty()) {
       throw new EntityNotFoundException("Advertisement with given id doesn't exist");
     }
+
     Advertisement advertisement = advertisementOpt.get();
-    Optional.ofNullable(updateAdvertisementDTO.getTitle())
-        .filter(Objects::nonNull)
-        .ifPresent(
-            title -> {
-              if (StringUtils.isBlank(title)) {
-                throw new EntityValidationException("Title must not be empty");
-              }
-              advertisement.setTitle(title);
-            });
-    Optional.ofNullable(updateAdvertisementDTO.getContent())
-        .filter(Objects::nonNull)
-        .ifPresent(
-            content -> {
-              if (StringUtils.isBlank(content)) {
-                throw new EntityValidationException("Content must not be empty");
-              }
-              advertisement.setContent(content);
-            });
+
+    if (Objects.nonNull(updateAdvertisementDTO.getTitle())) {
+      advertisement.setTitle(updateAdvertisementDTO.getTitle());
+    }
+
+    if (Objects.nonNull(updateAdvertisementDTO.getContent())) {
+      advertisement.setContent(updateAdvertisementDTO.getContent());
+    }
+
     advertisementRepository.save(advertisement);
   }
 
   @Override
   public void deleteAdvertisement(Integer advertisementId) {
-    if (advertisementRepository.existsById(advertisementId)) {
-      advertisementRepository.deleteById(advertisementId);
-    } else {
+    if (!advertisementRepository.existsById(advertisementId)) {
       throw new EntityNotFoundException("Advertisement with given id doesn't exist");
     }
+    advertisementRepository.deleteById(advertisementId);
   }
 }

@@ -19,3 +19,7 @@ spring:
     init:
       mode: always
       data-locations: classpath:/sql/data.sql
+
+web:
+  monobank:
+    url: https://api.monobank.ua/bank/currency
