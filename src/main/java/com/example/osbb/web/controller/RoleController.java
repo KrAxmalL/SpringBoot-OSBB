@@ -3,10 +3,9 @@ package com.example.osbb.web.controller;
 import com.example.osbb.domain.dto.role.AddRoleDTO;
 import com.example.osbb.domain.dto.role.RoleDetailsDTO;
 import com.example.osbb.service.RoleService;
-import javax.validation.Valid;
-
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

@@ -1,11 +1,11 @@
 package com.example.osbb.service;
 
-import com.example.osbb.domain.dto.principal.RegisterPrincipalDTO;
 import com.example.osbb.domain.dto.principal.UpdateRolesDTO;
+import com.example.osbb.domain.security.Principal;
 
 public interface PrincipalService {
 
-  void registerPrincipal(RegisterPrincipalDTO registerPrincipalDTO);
+  Principal getPrincipalByEmail(String email);
 
   void updateRolesForPrincipal(Integer principalId, UpdateRolesDTO updateRolesDTO);
 }

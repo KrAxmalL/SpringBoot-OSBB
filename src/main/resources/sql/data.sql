@@ -3,7 +3,7 @@ VALUES ('admin'),
        ('user');
 
 INSERT INTO principals(email, password)
-VALUES('admin@email.com', 'admin');
+VALUES('admin@email.com', '$2a$10$mfqNWGgqtMJIFf6.r1fajuTYJN66vnxFOh87/Qt190ek4CEwG5Y1W');
 
 INSERT INTO principals_roles(principal_id, role_id)
 VALUES(1, 1);

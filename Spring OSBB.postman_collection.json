@@ -1,0 +1,229 @@
+{
+	"info": {
+		"_postman_id": "006f5934-1672-48c8-90c8-7ee9a74667c3",
+		"name": "Spring OSBB",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "15844664"
+	},
+	"item": [
+		{
+			"name": "Register Valid User",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Register user and return 201\", function() {\r",
+							"    pm.response.to.have.status(201);\r",
+							"    pm.expect(pm.response.body).to.eq(undefined)\r",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\": \"user@email.com\",\r\n    \"password\": \"123\",\r\n    \"firstName\": \"Victor\",\r\n    \"lastName\": \"Pinkevych\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/authentication/registration",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"authentication",
+						"registration"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Register Invalid User",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Fail to register user with wrong email and return 400\", function() {\r",
+							"    const responseBody = pm.response.json();\r",
+							"    pm.expect(responseBody.status).to.eq(400)\r",
+							"    pm.expect(responseBody.message).to.eq(\"Email must contain valid email expression\")\r",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\": \"some_email\",\r\n    \"password\": \"123\",\r\n    \"firstName\": \"Victor\",\r\n    \"lastName\": \"Pinkevych\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/authentication/registration",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"authentication",
+						"registration"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update valid roles for principal Copy",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Update role list and return 200\", function() {\r",
+							"    pm.response.to.have.status(200)\r",
+							"    pm.expect(pm.response.body).to.eq(undefined)\r",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"roles\": [\"admin\"]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/principals/2",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"principals",
+						"2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update invalid roles for principal",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Fail to set empty role list for user and return 400\", function() {\r",
+							"    const responseBody = pm.response.json();\r",
+							"    pm.expect(responseBody.status).to.eq(400)\r",
+							"    pm.expect(responseBody.message).to.eq(\"Role list must contain at least 1 role\")\r",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"roles\": []\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/principals/2",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"principals",
+						"2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get advertisement by id",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Get advertisement by id and return 200\", function() {\r",
+							"    const responseBody = pm.response.json();\r",
+							"    pm.expect(responseBody.id).to.eq(1)\r",
+							"    pm.expect(responseBody.title).to.eq(\"Some advertisement\")\r",
+							"    pm.expect(responseBody.content).to.eq(\"Hello, world!\")\r",
+							"    pm.expect(responseBody.author.id).to.eq(1)\r",
+							"    pm.expect(responseBody.author.firstName).to.eq(\"John\")\r",
+							"    pm.expect(responseBody.author.lastName).to.eq(\"Doe\")\r",
+							"    pm.expect(responseBody.author.patronymic).to.eq(null)\r",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/advertisements/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"advertisements",
+						"1"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

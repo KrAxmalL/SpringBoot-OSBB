@@ -4,10 +4,9 @@ import com.example.osbb.domain.dto.advertisement.AddAdvertisementDTO;
 import com.example.osbb.domain.dto.advertisement.AdvertisementDetailsDTO;
 import com.example.osbb.domain.dto.advertisement.UpdateAdvertisementDTO;
 import com.example.osbb.service.AdvertisementService;
-import javax.validation.Valid;
-
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -41,7 +40,9 @@ public class AdvertisementController {
     return ResponseEntity.status(HttpStatus.CREATED).build();
   }
 
-  @Operation(summary = "Update advertisement. Should provide only fields which values you want to change. Values must be valid")
+  @Operation(
+      summary =
+          "Update advertisement. Should provide only fields which values you want to change. Values must be valid")
   @PutMapping("/{advertisementId}")
   public ResponseEntity<?> updateAdvertisement(
       @PathVariable Integer advertisementId,
@@ -50,7 +51,8 @@ public class AdvertisementController {
     return ResponseEntity.noContent().build();
   }
 
-  @Operation(summary = "Delete advertisement with provided id. Advertisement with provided id must exists")
+  @Operation(
+      summary = "Delete advertisement with provided id. Advertisement with provided id must exists")
   @DeleteMapping("/{advertisementId}")
   public ResponseEntity<?> deleteAdvertisement(@PathVariable Integer advertisementId) {
     advertisementService.deleteAdvertisement(advertisementId);

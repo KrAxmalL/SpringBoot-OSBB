@@ -23,3 +23,6 @@ spring:
 web:
   monobank:
     url: https://api.monobank.ua/bank/currency
+
+jwt:
+  secret: secret
