@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head></head>
+<body>
+    <div th:switch="${advertisements}">
+        <p>Available advertisements:</p>
+        <div th:each="advertisement : ${advertisements}">
+            <span sec:authorize="hasAuthority('admin')" th:text="'Id: ' + ${advertisement.id}"></span>
+            <span th:text="'Title: ' + ${advertisement.title}"></span>
+            <span th:text="'Content: ' + ${advertisement.content}"></span>
+            <span sec:authorize="hasAuthority('admin')" th:text="'Creation date: ' + ${#dates.format(advertisement.createdAt, 'dd-MM-yyyy HH:mm:ss')}"></span>
+            <span sec:authorize="hasAuthority('admin')" th:text="'Author id: ' + ${advertisement.author.id}"></span>
+            <span sec:authorize="hasAuthority('admin')" th:text="'Author first name: ' + ${advertisement.author.firstName}"></span>
+            <span sec:authorize="hasAuthority('admin')" th:text="'Author last name: ' + ${advertisement.author.lastName}"></span>
+            <span sec:authorize="hasAuthority('admin')" th:text="'Author patronymic: ' + ${advertisement.author.patronymic}"></span>
+        </div>
+    </div>
+    <p><a href="/pages/add-advertisement">Add new advertisement</a></p>
+    </div>
+</body>
+</html>

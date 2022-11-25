@@ -19,6 +19,6 @@ public class AddAdvertisementDTO {
   @NotBlank(message = "Content must not be empty")
   private String content;
 
-  @NotNull(message = "Author id must not be empty")
+  @NotNull(message = "Author id must not be null")
   private Integer authorId;
 }
