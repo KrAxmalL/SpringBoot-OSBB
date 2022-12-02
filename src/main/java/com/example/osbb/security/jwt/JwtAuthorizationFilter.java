@@ -40,7 +40,6 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
       filterChain.doFilter(request, response);
     } else {
       Optional.ofNullable(request.getHeader(HttpHeaders.AUTHORIZATION))
-          .filter(Objects::nonNull)
           .filter(header -> header.startsWith(BEARER_STR))
           .map(header -> header.substring(BEARER_LENGTH))
           .ifPresentOrElse(
